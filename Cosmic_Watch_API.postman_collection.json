@@ -1,0 +1,610 @@
+{
+	"info": {
+		"_postman_id": "cosmic-watch-api-collection",
+		"name": "Cosmic Watch API",
+		"description": "Comprehensive API documentation and testing suite for the Cosmic Watch NEO Monitoring Platform.\n\n## Architecture\n- **Base URL**: `{{baseUrl}}`\n- **Authentication**: JWT (Bearer Token)\n- **Rate Limiting**: Applied on Auth and External API routes\n\n## Setup\n1. Set `baseUrl` environment variable (default: `http://localhost:3000`)\n2. Run **Register** or **Login** to automatically generate and save your `authToken`.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register New User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"authToken\", jsonData.token);",
+									"    console.log(\"Token saved to environment\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"commander@cosmicwatch.dev\",\n    \"username\": \"CommanderShepard\",\n    \"password\": \"CosmicWatch1!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Registers a new user and returns a JWT token. \n\n**Note**: Automatically saves the received token to the `authToken` environment variable."
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"pm.test(\"Response has token\", function () {",
+									"    pm.expect(jsonData).to.have.property('token');",
+									"});",
+									"",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"authToken\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@cosmicwatch.dev\",\n    \"password\": \"CosmicWatch1!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Authenticates a user. The response includes a JWT token and user details."
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/verify",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"verify"
+							]
+						},
+						"description": "Verifies the validity of the current `authToken`. Returns user details if valid."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Clears the HTTP-only refresh cookie."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Asteroids",
+			"item": [
+				{
+					"name": "Get Asteroid Feed",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/asteroids/feed?start_date=2024-01-01&end_date=2024-01-07",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"asteroids",
+								"feed"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2024-01-01",
+									"description": "Format: YYYY-MM-DD"
+								},
+								{
+									"key": "end_date",
+									"value": "2024-01-07",
+									"description": "Format: YYYY-MM-DD (Max 7 days range)"
+								}
+							]
+						},
+						"description": "Retrieves a list of Near-Earth Objects (NEOs) within a specific date range."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Asteroid Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/asteroids/{{asteroidId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"asteroids",
+								"{{asteroidId}}"
+							]
+						},
+						"description": "Fetches detailed telemetry data for a specific Asteroid ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Search Asteroids",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/asteroids/search?q=2024&hazardous=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"asteroids",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "2024",
+									"description": "Search term (name or ID)"
+								},
+								{
+									"key": "hazardous",
+									"value": "true",
+									"description": "Filter by hazardous status (boolean)"
+								},
+								{
+									"key": "min_diameter",
+									"value": "100",
+									"description": "Minimum estimated diameter (meters)",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Searches the local database for asteroids matching criteria."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/asteroids/stats",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"asteroids",
+								"stats"
+							]
+						},
+						"description": "Returns aggregated statistics about the tracked NEOs, including total count and hazardous count."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Approaching Asteroids",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/asteroids/approaching?days=7",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"asteroids",
+								"approaching"
+							],
+							"query": [
+								{
+									"key": "days",
+									"value": "7",
+									"description": "Number of days to look ahead"
+								}
+							]
+						},
+						"description": "Returns a list of asteroids approaching Earth within the specified timeframe, sorted by miss distance."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Risk Analysis",
+			"item": [
+				{
+					"name": "Get Risk Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/risk-analysis/{{asteroidId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"risk-analysis",
+								"{{asteroidId}}"
+							]
+						},
+						"description": "Triggers or retrieves a cached risk analysis for a specific asteroid. Uses Gemini AI and internal algorithms."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Chat",
+			"item": [
+				{
+					"name": "Get Chat History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/chat/{{asteroidId}}?limit=50",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"chat",
+								"{{asteroidId}}"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50"
+								},
+								{
+									"key": "before",
+									"value": "2024-01-01T00:00:00Z",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Retrieves the chat message history for a specific asteroid room."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Profile (Proposed)",
+			"description": "Architecture definitions for User Profile management.",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/user/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"StarLord\",\n    \"avatarUrl\": \"https://example.com/avatar.png\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/user/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Watchlist (Proposed)",
+			"description": "Architecture definitions for Watchlist management.",
+			"item": [
+				{
+					"name": "Get Watchlist",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/watchlist",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"watchlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add to Watchlist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"asteroidId\": \"{{asteroidId}}\",\n    \"notes\": \"Potential collision course in 2029\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/watchlist",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"watchlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove from Watchlist",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/watchlist/{{asteroidId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"watchlist",
+								"{{asteroidId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Alerts (Proposed)",
+			"description": "Architecture definitions for Alert management.",
+			"item": [
+				{
+					"name": "Get All Alerts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/alerts?unread=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"alerts"
+							],
+							"query": [
+								{
+									"key": "unread",
+									"value": "true",
+									"description": "Filter by unread status"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Alert Read",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/alerts/1/read",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"alerts",
+								"1",
+								"read"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dismiss Alert",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/alerts/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"alerts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Automatically inject Authorization Header if token exists",
+					"if (pm.environment.get('authToken') && !pm.request.headers.has('Authorization')) {",
+					"    pm.request.headers.add({",
+					"        key: 'Authorization',",
+					"        value: 'Bearer ' + pm.environment.get('authToken')",
+					"    });",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Common Assertions for all requests",
+					"",
+					"// 1. Check for success status (2xx)",
+					"pm.test(\"Status code is successful\", function () {",
+					"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+					"});",
+					"",
+					"// 2. Check response time",
+					"pm.test(\"Response time is acceptable (<1000ms)\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+					"});",
+					"",
+					"// 3. Validate JSON format",
+					"if (pm.response.headers.get('Content-Type') && pm.response.headers.get('Content-Type').includes('application/json')) {",
+					"    pm.test(\"Response is valid JSON\", function () {",
+					"        pm.response.to.be.json;",
+					"    });",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "asteroidId",
+			"value": "2465633",
+			"type": "string"
+		}
+	]
+}

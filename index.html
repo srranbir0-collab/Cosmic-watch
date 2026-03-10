@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cosmic Watch</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@100..800&family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ['"Bricolage Grotesque"', 'sans-serif'],
+              sans: ['"Instrument Sans"', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'monospace'],
+              hero: ['"Orbitron"', 'sans-serif'],
+            },
+            colors: {
+              void: {
+                950: '#020408', // Deepest black
+                900: '#050A14', // Background base
+                800: '#0F1629', // Card bg
+                700: '#1A233C', // Borders/Separators
+                600: '#2D3B5E',
+              },
+              molten: {
+                DEFAULT: '#FF3D00',
+                glow: '#FF6E40',
+                dim: '#992400',
+                bg: 'rgba(255, 61, 0, 0.1)'
+              },
+              electric: {
+                DEFAULT: '#00F0FF',
+                glow: '#80F7FF',
+                dim: '#008F99',
+                bg: 'rgba(0, 240, 255, 0.1)'
+              },
+              gravity: {
+                DEFAULT: '#7C3AED',
+                glow: '#A78BFA',
+                bg: 'rgba(124, 58, 237, 0.1)'
+              }
+            },
+            borderRadius: {
+              'sm': 'var(--radius-sm)',
+              'md': 'var(--radius-md)',
+              'lg': 'var(--radius-lg)',
+              'xl': 'var(--radius-xl)',
+            },
+            backgroundImage: {
+              'nebula-gradient': 'radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.15) 0%, rgba(5, 10, 20, 0) 50%)',
+              'grid-pattern': "linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px)",
+              'conic-electric': 'conic-gradient(from 0deg, transparent 0deg, #00F0FF 180deg, transparent 360deg)',
+              'conic-molten': 'conic-gradient(from 0deg, transparent 0deg, #FF3D00 180deg, transparent 360deg)',
+            },
+            boxShadow: {
+              'glow-molten': '0 0 30px -5px rgba(255, 61, 0, 0.4)',
+              'glow-electric': '0 0 30px -5px rgba(0, 240, 255, 0.4)',
+              'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.3)',
+            },
+            animation: {
+              'spin-slow': 'spin-slow 4s linear infinite',
+              'border-beam': 'border-beam 2s linear infinite',
+            },
+            keyframes: {
+              'spin-slow': {
+                '0%': { transform: 'rotate(0deg)' },
+                '100%': { transform: 'rotate(360deg)' },
+              },
+              'border-beam': {
+                '100%': { 'offset-distance': '100%' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      :root {
+        --radius-sm: 8px;
+        --radius-md: 16px;
+        --radius-lg: 24px;
+        --radius-xl: 32px;
+      }
+      body {
+        background-color: #050A14;
+        color: #F8FAFC;
+        overflow-x: hidden;
+      }
+      .glass-panel {
+        background: rgba(15, 22, 41, 0.6);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #050A14;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #1A233C;
+        border-radius: 99px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #2D3B5E;
+      }
+      
+      /* Subtle noise texture overlay */
+      .noise-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
+
+      /* Card Hover 3D Perspective Container */
+      .perspective-1000 {
+        perspective: 1000px;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "framer-motion": "https://esm.sh/framer-motion@^12.34.0",
+    "date-fns": "https://esm.sh/date-fns@^4.1.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.40.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-router-dom": "https://esm.sh/react-router-dom@6.22.1",
+    "@remix-run/router": "https://esm.sh/@remix-run/router@1.15.0",
+    "zustand": "https://esm.sh/zustand@^5.0.11",
+    "dotenv": "https://esm.sh/dotenv@^17.2.4",
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.4",
+    "express": "https://esm.sh/express@^5.2.1",
+    "cors": "https://esm.sh/cors@^2.8.6",
+    "url": "https://esm.sh/url@^0.11.4",
+    "path": "https://esm.sh/path@^0.12.7",
+    "helmet": "https://esm.sh/helmet@^8.1.0",
+    "express-rate-limit": "https://esm.sh/express-rate-limit@^8.2.1",
+    "mysql2/": "https://esm.sh/mysql2@^3.16.3/",
+    "node-fetch": "https://esm.sh/node-fetch@^3.3.2",
+    "@prisma/client": "https://esm.sh/@prisma/client@^7.3.0",
+    "three": "https://esm.sh/three@0.160.0",
+    "three/examples/jsm/controls/OrbitControls.js": "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js",
+    "three/examples/jsm/postprocessing/EffectComposer.js": "https://esm.sh/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js",
+    "three/examples/jsm/postprocessing/RenderPass.js": "https://esm.sh/three@0.160.0/examples/jsm/postprocessing/RenderPass.js",
+    "three/examples/jsm/postprocessing/UnrealBloomPass.js": "https://esm.sh/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js",
+    "three/examples/jsm/postprocessing/ShaderPass.js": "https://esm.sh/three@0.160.0/examples/jsm/postprocessing/ShaderPass.js",
+    "three/examples/jsm/shaders/LuminosityHighPassShader.js": "https://esm.sh/three@0.160.0/examples/jsm/shaders/LuminosityHighPassShader.js",
+    "three/examples/jsm/shaders/CopyShader.js": "https://esm.sh/three@0.160.0/examples/jsm/shaders/CopyShader.js",
+    "three/": "https://esm.sh/three@^0.160.0/",
+    "process": "https://esm.sh/process@^0.11.10",
+    "buffer": "https://esm.sh/buffer@^6.0.3",
+    "axios": "https://esm.sh/axios@^1.13.5",
+    "compression": "https://esm.sh/compression@^1.8.1",
+    "node-cache": "https://esm.sh/node-cache@^5.1.2",
+    "bottleneck": "https://esm.sh/bottleneck@^2.19.5",
+    "axios-retry": "https://esm.sh/axios-retry@^4.5.0",
+    "winston": "https://esm.sh/winston@^3.19.0",
+    "winston-daily-rotate-file": "https://esm.sh/winston-daily-rotate-file@^5.0.0",
+    "vitest": "https://esm.sh/vitest@^4.0.18",
+    "zod": "https://esm.sh/zod@^4.3.6",
+    "canvas-confetti": "https://esm.sh/canvas-confetti@^1.9.4",
+    "jsonwebtoken": "https://esm.sh/jsonwebtoken@^9.0.3",
+    "bcryptjs": "https://esm.sh/bcryptjs@^3.0.3",
+    "cookie-parser": "https://esm.sh/cookie-parser@^1.4.7",
+    "socket.io": "https://esm.sh/socket.io@4.7.4",
+    "socket.io-client": "https://esm.sh/socket.io-client@4.7.4",
+    "http": "https://esm.sh/http@^0.0.1-security",
+    "gsap": "https://esm.sh/gsap@^3.14.2",
+    "ogl": "https://esm.sh/ogl@^1.0.11",
+    "fs": "https://esm.sh/fs@^0.0.1-security",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.95.3",
+    "@clerk/clerk-sdk-node": "https://esm.sh/@clerk/clerk-sdk-node@^5.1.6",
+    "@clerk/clerk-react": "https://esm.sh/@clerk/clerk-react@^5.60.1",
+    "@clerk/themes": "https://esm.sh/@clerk/themes@^2.4.52"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <div class="noise-overlay"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

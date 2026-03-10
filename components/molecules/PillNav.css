@@ -1,0 +1,179 @@
+
+.pill-nav-container {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  z-index: 100;
+  pointer-events: auto;
+}
+
+.pill-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(5, 10, 20, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.pill-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin-right: 2rem;
+  transform-origin: center;
+}
+
+.pill-logo img {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+
+.pill-nav-items {
+  flex: 1;
+}
+
+.pill-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.pill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--pill-text, #fff);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 600;
+  overflow: hidden;
+  transition: color 0.3s ease;
+  cursor: pointer;
+  background: transparent;
+  white-space: nowrap;
+}
+
+.pill.is-active {
+  color: var(--hover-text, #000);
+}
+
+.hover-circle {
+  position: absolute;
+  background: var(--pill-bg, #fff);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.label-stack {
+  position: relative;
+  z-index: 1;
+  display: block;
+  height: 1.2em;
+  overflow: hidden;
+}
+
+.pill-label, .pill-label-hover {
+  display: block;
+  line-height: 1.2em;
+}
+
+.pill-label-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: var(--hover-text, #000);
+}
+
+.mobile-menu-button {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  width: 44px;
+  height: 44px;
+}
+
+.hamburger-line {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--pill-text, #fff);
+  margin: 0 auto;
+}
+
+.mobile-menu-popover {
+  position: absolute;
+  top: calc(100% + 1rem);
+  right: 0;
+  left: 0;
+  background: rgba(5, 10, 20, 0.9);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 1.5rem;
+  visibility: hidden;
+  transform-origin: top center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mobile-menu-link {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: var(--pill-text, #fff);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: background 0.2s;
+  text-align: center;
+}
+
+.mobile-menu-link:hover,
+.mobile-menu-link.is-active {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--pill-bg, #00F0FF);
+}
+
+@media (max-width: 768px) {
+  .desktop-only { display: none; }
+  .mobile-menu-button { display: flex; }
+  
+  .pill-nav {
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+  }
+}

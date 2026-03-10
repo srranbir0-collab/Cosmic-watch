@@ -1,0 +1,5 @@
+{
+  "name": "Cosmic Watch",
+  "description": "A real-time Near-Earth Object (NEO) monitoring platform using NASA data and Gemini AI for impact risk analysis.",
+  "requestFramePermissions": []
+}
